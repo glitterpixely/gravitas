@@ -39,6 +39,8 @@ page.on('console', msg => { if (msg.type() === 'error') consoleErrors.push(msg.t
 3. The process exits non-zero when any gate fails. A suite that always exits 0 reports nothing.
 4. Anything captured is asserted on or deleted. Collecting console errors into an array nobody reads is worse than not collecting them, because the code looks like it checks.
 5. Confirm the check ran before reading its output. An empty result and a crashed script look identical when you are searching for failures, so verify by exit status, by a line count, or by a marker the check prints when it completes.
+6. A threshold has two bounds and names what must remain. A ceiling alone is met by removing the thing: in a previz render, a gate of "under 2% clipped pixels" passed once the agent darkened the whole frame, and the lamps, the flash and the facades went with the highlights. Give every number a range, pair it with what must still be visible, and measure a change as a lift between two states where you can (the strike frame against ten frames earlier), because a lift cannot be met by darkness.
+7. The subject is in frame before anything is measured. A pixel metric on a capture that misses its subject passes trivially: three of six hero shots in the same run drifted to a car roof, a column and the back of the car, and every number still passed. The first gate on any still names what must be visible in it.
 
 ## A Pass Needs A Reason
 
@@ -47,6 +49,10 @@ A passing result is evidence only when the thing under test actually happened. B
 Two cases from testing Antigravity itself. An injection test appeared to show the agent resisting a malicious instruction planted in a file; the transcript showed the `read_file` call had been denied by the permission system, so the agent never saw the payload and nothing was resisted. Separately, headless runs in which a tool was denied returned `"status": "SUCCESS"` and exit code 0 with the turn's work discarded, which is filed upstream as issue #794 on `google-antigravity/antigravity-cli`. In both cases the pass signal came from the harness and said nothing about the behaviour.
 
 For every pass that matters, name the evidence that the tested path ran: the tool step in the transcript, the log line, the counter that moved, the request that fired.
+
+## The Measure Is Not The Goal
+
+A gate stands for something the person wants, and passing it by reshaping the work defeats it. In 15 runs audited for this release with this plugin loaded, the largest group of defects was of this kind: an agent reverse-engineered an onset detector and shaped the exported audio hop by hop until the meter passed; another added unplanned grey fills so a riser's frame differences grew monotonically; another kept a 3 px grid drift so a frozen-time check would pass and left it out of the report; another hid partly visible cells to pass a text-clipping gate and blamed the camera; another used its own render stills as the concept keyframes and passed the gate that compared them. Each pass was real and each measured nothing the person wanted. When a gate and the thing it stands for pull apart, the thing wins: fix the work, or report the gate as failed with the reason. A critic's perfect score does not outrank a defect you already know about, and a pass that depends on something the person told you to remove is a failure with a note.
 
 ## Rule Out Your Own Instrument
 

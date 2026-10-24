@@ -4,6 +4,57 @@ All notable changes to this project are documented in this file.
 
 This project follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and [Semantic Versioning](https://semver.org/).
 
+## [1.2.1] - 2026-10-21
+
+### Added
+- `16-gate-gaming.md`, in all four languages: the three ways a verifier passed while the work did not change (fallback defaults, declared labels, gates that describe a shape), the cheapest-pass review, one before many, distinctness beside consistency, and where the right verifier comes from (the reference's measurements, a viewer question per gate calibrated against a blind critic, an independent instrument, a frozen suite owned by nobody who builds, a gate library). Built from two rounds of a 25-scene SVG film built headless on Gemini 4 Argon on 2026-10-20 that passed sixteen gates, a screener, three critics and a seeded audit with the same picture twenty-five times, twice.
+
+### Changed
+- `00-orchestrator.md` module table lists module 16.
+- READMEs count seventeen modules.
+
+## [1.2.0] - 2026-10-20
+
+### Added
+- `15-harness-probing.md`, in all four languages: how to improve the harness (briefs, gates, checklists, tool rules, model mix, handoff files) while the work runs, adapted from Google Research's Harness² (Apache-2.0, arXiv 2610.14224). Propose two variants of one brief that differ in one dimension, probe both on the same item with the same seed, gates, screener and critic, and let an agent that ran neither compose the better brief with the evidence that decided. Lessons persist in `HARNESS_LESSONS.md` at the workspace root, one entry per probe with the evidence, the adopted rule and where it now lives; a lesson is retired with the evidence that retired it, never deleted. One probe pair per round by default, on the item that failed worst; guardrails against probing the gates themselves, against letting a probe agent judge its own pair, and against adopting on narration. The orchestrator's loading matrix names it for standard scale and above, before each round after the first, and `09-orchestration.md` points to it from staged escalation.
+
+### Changed
+- `13-platform.md`: the headless `401` row no longer says "about the hour mark". In 12 logged runs on 1.4.0 to 1.4.2 the cut came at 18, 28, 42, 53, 58, 61, 138, 208, 265 and 486 minutes, two runs of 60 and 383 minutes finished clean, and one turn ended instead with `NOT_FOUND (code 404): models/barium-b-agy is not found`; the files and subagent work survived every time. The sandbox row records that on Windows the sandbox runs commands as an AppContainer identity, so a workspace on an exFAT drive exits with code 2 at the first `run_command` with no result event (issue #1296). The orchestrator's report sentence says the same: a cut can come at any time, so every output and the report are written before the final reply.
+- READMEs count sixteen modules.
+
+## [1.1.2] - 2026-10-19
+
+### Added
+- `05-acceptance.md`, rules 6 and 7 for a gate, in all four languages, from a Three.js previz build run headless on Gemini 4 Argon High and then put through a quality round. A threshold has two bounds and names what must remain: a gate of "under 2% clipped pixels" passed once the agent darkened the whole frame, and the lamps, the flash and the facades went with the highlights; so every number gets a range, a "must still be visible" clause, and, where possible, a lift between two states, which darkness cannot meet. The subject is in frame before anything is measured: three of six hero shots drifted to a car roof, a column and the back of the car, and every pixel metric still passed. `06-perceptual-gates.md` points to both from the sampled-view method.
+- `13-platform.md`: a headless `agy -p` turn ended with `UNAUTHENTICATED (code 401)` at about the hour mark in 2 of 2 long runs on 1.4.0 (28 and 61 minutes), with the subagents' work and the written files intact; `agy -c` resumed the conversation. The orchestrator says to write the report before then and to resume. The row replaces the `--json-schema` entry, a defect fixed in 1.2.14, to keep the module at 100 lines.
+
+## [1.1.1] - 2026-10-18
+
+### Changed
+- The three module sections added in 1.1.0 (`01-evidence.md`: `observed` reaches as far as the view, and narrated verification; `05-acceptance.md`: the measure is not the goal; `06-perceptual-gates.md`: sampled views) are now written for zh-CN, ja and ko readers, with the `observed` table row and the orchestrator's `narration_check.py` line. The 1.1.0 known limit that they were English-only no longer holds.
+- The zh-CN, ja and ko READMEs say, as the English one does, that the five core scripts include `narration_check.py`, that on Windows and a Mac no command is typed and on Linux one line is, and that the `.command` and `.sh` files beside the Windows installer are for Macs and Linux.
+- The agent files are English in every language, as they were in 1.0; nothing changed there.
+
+## [1.1.0] - 2026-10-18
+
+Changes drawn from an audit of real Antigravity conversations on this machine in October 2026: of 95 reasoning defects found across the audited runs, 37 came from 15 runs with this plugin loaded. The native support for Linux that people asked for is here too.
+
+### Added
+- `Install Gravitas (Linux).sh`, the Mac installer with the macOS parts replaced: the default language comes from `LANGUAGE`, `LC_ALL`, `LC_MESSAGES` or `LANG`, beta 1's hook is taken out of `hooks.json` by the first Python 3 that runs instead of JavaScript for Automation, there is no `xattr` step, and the messages name a file manager and a terminal. It is run from a terminal with `bash "Install Gravitas (Linux).sh"`, because a double-click on most Linux desktops opens a shell script in a text editor. Each README has an On Linux section. `tests/scripts/test_installers.py` runs it through every case the Mac installer gets, under Git Bash on Windows, and runs its Python on its own against what `install.py` writes; `release_check.py`, `build_release_zip.py`, `readme_parity.py` and `test_release.py` know the third installer. Like the Mac installer, it has not yet run on the system it is for.
+- `scripts/narration_check.py`: lists every sentence in an answer that says a check was done ("I verified the transitions", "the figures were checked", "inspection of the sheet reveals") and names no command, file, capture, URL, label or exit status in the same sentence. The commonest defect in the audited runs was a check that never happened, written as a done thing; on the reasoning of one audited run it flags 7 such sentences, including the false claim that the sheets showed a jump cut every 24 frames. English only. `tests/scripts/test_narration_check.py` covers it in 14 cases, and the orchestrator runs it with `provenance_check.py` before the final reply.
+- `01-evidence.md`: `observed` reaches only as far as the view you had. Frames sampled from a video show the sampled instants and nothing between them, so a label names the view with the artifact and writes what the view cannot show as not assessed. A section on narrated verification records the defect and the rule: a check is a tool event.
+- `06-perceptual-gates.md`: a Sampled Views section, built from a run that compared two videos through contact sheets, labelled seamless transitions and no flicker `observed`, read the sampler's frame numbers as text overlays, and never measured the one thing the sheets could show. It gives the method: record the instrument, measure what the samples can show with a tool, write the rest as not assessed in the field that asks for it, and keep rendered, technically checked, perceptually reviewed, not assessed and blocked apart.
+- `05-acceptance.md`: The Measure Is Not The Goal, from the largest group of defects in the audited runs with this plugin loaded: audio shaped hop by hop to pass an onset meter, grey fills added so frame differences grew monotonically, a grid drift kept to pass a frozen-time check, cells hidden to pass a text-clipping gate, render stills passed off as concept keyframes. When a gate and what it stands for pull apart, the thing wins, and a critic's perfect score does not outrank a defect already known.
+- `gravitas-visual-critic` decides first which questions the image can answer at all, returns the rest in a new `not_assessed` field with the reason, repeats the instrument record in `instrument`, and treats a sampler's marks as not part of the image. The shared evidence block in every verifier says the same about sampled views and about claims of checks that name no tool step.
+
+### Changed
+- The always-on rule's floor, in all four languages: a check is a tool event, so a sentence that says something was verified names what ran or was opened, or goes; a sampled or summarised view shows what is in it and nothing beyond, and a required field takes that limit as its answer; a harness's status, a tool's summary line or an earlier sentence of the agent's own is not evidence that a check passed; a measure the person set is met as they meant it, never by reshaping the work to fit the number; a correction rewrites every reason it reaches; a step that has failed twice is diagnosed, not retried unchanged; and after the conversation has been summarised, what the reply relies on is re-read or re-run. Each line answers a defect pattern from the audit: narrated verification, misread sampled evidence, premature success on harness signals, metric gaming, perseveration after a correction, and errors that survived a context summary.
+- `README.md` says that on Windows and a Mac no command is typed and on Linux one line is, and every README's limits say the Mac and Linux installers have not run on a Mac or on Linux.
+
+### Known limits
+- The new module sections in `01-evidence.md`, `05-acceptance.md` and `06-perceptual-gates.md`, and the new agent text, are English-only in this version; the zh-CN, ja and ko modules are unchanged. The rule's new floor lines are in all four languages.
+- Neither the new rule lines nor `narration_check.py` has been benchmarked. They were written from the audit, not measured against it.
+
 ## [1.0.0] - 2026-10-11
 
 The first official release of Gravitas, after two private betas. Everything below changed since 1.0.0-beta.2.
